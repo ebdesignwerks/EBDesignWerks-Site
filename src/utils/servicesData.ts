@@ -1,0 +1,125 @@
+import { Service } from '../types';
+
+export const services: Service[] = [
+  {
+    id: '3d-scanning',
+    title: '3D Scanning Services',
+    description: 'High-resolution structured-light scanning with 0.02mm accuracy for reverse engineering, digital archiving, and quality inspection.',
+    icon: '📸',
+    features: [
+      'Structured-light scanner with 0.02mm resolution',
+      'Color and texture capture capabilities',
+      'On-site and in-house scanning available',
+      'Reverse engineering and CAD modeling',
+      'Digital inspection services',
+      'Handles small to medium objects',
+    ],
+    pricing: {
+      minimum: 200,
+      hourly: 150,
+      factors: [
+        'Object size and complexity',
+        'Fine details vs. simple shapes',
+        'Color capture requirements',
+        'Travel time for on-site work',
+        'Post-processing and modeling needs',
+      ],
+    },
+  },
+  {
+    id: '3d-printing',
+    title: '3D Printing & Rapid Prototyping',
+    description: 'Professional FDM printing with engineering materials including PPS-CF10 carbon fiber composite for high-strength applications.',
+    icon: '🖨️',
+    features: [
+      '350 × 350 × 350 mm build volume',
+      'PLA, ABS, PETG, Nylon materials',
+      'Advanced PPS-CF10 carbon fiber composite',
+      'Heat-resistant parts up to 264°C',
+      'Rapid turnaround times',
+      'Small batch production',
+    ],
+    pricing: {
+      factors: [
+        'Material selection (PLA ~$13-14, ABS ~$14, Nylon ~$15-30)',
+        'PPS-CF10 for high-strength applications',
+        'Part size and complexity',
+        'Layer resolution and quality',
+        'Post-processing requirements',
+        'Quantity discounts available',
+      ],
+    },
+  },
+  {
+    id: 'powder-coating',
+    title: 'Powder Coating Services',
+    description: 'Durable, professional powder coating finishes that resist corrosion, chemicals, and UV damage better than traditional painting.',
+    icon: '🎨',
+    features: [
+      'Superior durability vs. liquid paint',
+      'Corrosion and chemical resistance',
+      'UV-resistant finishes',
+      'Wide range of colors and textures',
+      'Environmentally friendly process',
+      'Ideal for automotive and industrial parts',
+    ],
+    pricing: {
+      factors: [
+        'Part size and surface area',
+        'Standard vs. specialty powders',
+        'Coating thickness requirements',
+        'Preparation and masking needs',
+        'Volume discounts for batches',
+        'Metallic or textured finishes',
+      ],
+    },
+  },
+  {
+    id: 'carbon-fiber',
+    title: 'Carbon Fiber Composites',
+    description: 'Custom carbon fiber parts using wet lay-up and 3D-printed molds for lightweight, high-strength applications.',
+    icon: '🔧',
+    features: [
+      'Wet lay-up fabrication method',
+      '3D-printed molds for complex shapes',
+      'Hybrid reinforcement options',
+      '30x strength improvement possible',
+      'Lightweight alternative to metal',
+      'Custom design consultation',
+    ],
+    pricing: {
+      factors: [
+        'Part size and complexity',
+        'Mold requirements',
+        'Fiber orientation needs',
+        'Surface finish quality',
+        'Epoxy system selection',
+        'Production quantity',
+      ],
+    },
+  },
+  {
+    id: 'design-consulting',
+    title: 'Design & Manufacturing Consulting',
+    description: 'Expert guidance on part design, material selection, and manufacturing strategy to optimize your project for additive manufacturing.',
+    icon: '💡',
+    features: [
+      'Design for additive manufacturing (DfAM)',
+      'Material selection guidance',
+      'Topology optimization',
+      'Cost reduction strategies',
+      'Production planning',
+      'Partnership with CNC and injection molding',
+    ],
+    pricing: {
+      hourly: 150,
+      factors: [
+        'Project complexity',
+        'Design optimization needs',
+        'Prototyping iterations',
+        'Documentation requirements',
+        'Ongoing support needs',
+      ],
+    },
+  },
+];
