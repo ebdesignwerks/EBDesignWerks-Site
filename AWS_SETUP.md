@@ -132,6 +132,34 @@ Estimated monthly costs for moderate usage:
 - **API Gateway**: $3.50 per million requests
 - **Amplify Hosting**: ~$0.15/GB served
 
+## Common Setup Errors & Solutions
+
+### Lambda Function Dependencies
+
+If you see errors about missing AWS SDK packages:
+1. Create `package.json` in each Lambda function directory
+2. Install dependencies:
+   ```bash
+   cd amplify/functions/send-quote-request
+   npm install
+   ```
+
+### TypeScript Errors
+
+If you see "Cannot find name 'process'" errors:
+1. Install Node types in the amplify directory:
+   ```bash
+   cd amplify
+   npm install --save-dev @types/node
+   ```
+2. Ensure tsconfig.json includes node types
+
+### Environment Variables
+
+The S3 bucket name is dynamically generated. In your Lambda function:
+- Use the pattern: `amplify-${process.env.AWS_BRANCH || 'main'}-quoterequestfiles`
+- Or check CloudFormation outputs for the exact bucket name
+
 ## Troubleshooting
 
 ### Email Not Sending
