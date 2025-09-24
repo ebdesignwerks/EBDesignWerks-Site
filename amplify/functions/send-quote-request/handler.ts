@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
