@@ -44,7 +44,10 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       attachmentLinks = '\n\nAttached Files:\n';
       for (const key of body.attachmentKeys) {
         const command = new GetObjectCommand({
-          Bucket: process.env.STORAGE_QUOTEREQUESTFILES_BUCKETNAME,
+          // Amplify Gen2 bucket naming pattern: amplify-{appId}-{branchName}-{stackName}-{resourceName}
+          // We'll construct this from environment variables
+          Bucket: process.env.STORAGE_QUOTEREQUESTFILES_BUCKETNAME || 
+                  `amplify-${process.env.AWS_BRANCH || 'main'}-quoterequestfiles`,
           Key: key
         });
         const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 604800 }); // 7 days
