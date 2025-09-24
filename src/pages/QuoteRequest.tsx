@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { sendQuoteRequest } from '../utils/emailService';
+import { sendQuoteRequestAWS } from '../utils/amplifyService';
 import { services } from '../utils/servicesData';
 import './QuoteRequest.css';
 
@@ -33,13 +34,8 @@ const QuoteRequest: React.FC = () => {
     setAttachments(prev => prev.filter((_, i) => i !== index));
   };
 
-  const uploadFiles = async (files: File[]): Promise<string[]> => {
-    // In a production app, you would upload these to S3 or another storage service
-    // For now, we'll just return placeholder URLs
-    // TODO: Implement actual file upload to AWS S3
-    console.log('Files to upload:', files);
-    return files.map(file => `[File: ${file.name} (${(file.size / 1024).toFixed(2)}KB)]`);
-  };
+  // Check if we're using AWS Amplify or EmailJS
+  const useAWS = typeof window !== 'undefined' && window.location.hostname !== 'localhost';
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -47,17 +43,22 @@ const QuoteRequest: React.FC = () => {
     setErrorMessage('');
 
     try {
-      // Upload attachments if any
-      let attachmentUrls: string[] = [];
-      if (attachments.length > 0) {
-        attachmentUrls = await uploadFiles(attachments);
+      if (useAWS) {
+        // Use AWS services for production
+        await sendQuoteRequestAWS({
+          ...data,
+          attachments,
+        });
+      } else {
+        // Use EmailJS for local development
+        const attachmentUrls = attachments.map(file => 
+          `[File: ${file.name} (${(file.size / 1024).toFixed(2)}KB)]`
+        );
+        await sendQuoteRequest({
+          ...data,
+          attachmentUrls,
+        });
       }
-
-      // Send email
-      await sendQuoteRequest({
-        ...data,
-        attachmentUrls,
-      });
 
       setSubmitStatus('success');
       reset();
