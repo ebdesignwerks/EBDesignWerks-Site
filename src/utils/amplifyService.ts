@@ -51,16 +51,16 @@ export const sendQuoteRequestAWS = async (data: QuoteRequestData): Promise<void>
       attachmentKeys = await uploadFiles(data.attachments);
     }
     
-    // Prepare request body
+    // Prepare request body - ensure all fields are defined
     const requestBody = {
       name: data.name,
       email: data.email,
-      phone: data.phone,
-      company: data.company,
+      phone: data.phone || '',  // Provide default empty string
+      company: data.company || '',  // Provide default empty string
       service: data.service,
       projectDescription: data.projectDescription,
-      timeline: data.timeline,
-      budget: data.budget,
+      timeline: data.timeline || 'Not specified',  // Provide default value
+      budget: data.budget || 'Not specified',  // Provide default value
       attachmentKeys
     };
     
@@ -73,7 +73,7 @@ export const sendQuoteRequestAWS = async (data: QuoteRequestData): Promise<void>
       }
     }).response;
     
-    const responseData = await response.body.json();
+    const responseData = await response.body.json() as { message?: string };
     
     if (!response.statusCode || response.statusCode >= 400) {
       throw new Error(responseData?.message || 'Failed to send quote request');
@@ -93,10 +93,14 @@ export const sendQuoteRequestAWS = async (data: QuoteRequestData): Promise<void>
 export const initializeAmplify = async () => {
   try {
     const { Amplify } = await import('aws-amplify');
-    const outputs = await import('../../amplify_outputs.json');
+    // Use dynamic import with explicit path for build compatibility
+    const configModule = await import(/* @vite-ignore */ '../../amplify_outputs.json');
+    const outputs = configModule.default || configModule;
     
-    Amplify.configure(outputs.default);
+    Amplify.configure(outputs);
   } catch (error) {
     console.error('Failed to initialize Amplify:', error);
+    // In production, the config might be provided differently
+    console.warn('Amplify configuration not found. AWS features may be unavailable.');
   }
 };
