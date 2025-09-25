@@ -6,7 +6,8 @@ applications:
         preBuild:
           commands:
             - npm ci
-            - npm run amplify:generate  # Generate amplify_outputs.json
+            # Using existing amplify_outputs.json instead of regenerating
+            - echo "Using existing amplify_outputs.json"
         build:
           commands:
             - npm run build
