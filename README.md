@@ -13,18 +13,20 @@ A modern, responsive website for EB Design Werks - Custom 3D Scanning, Printing 
 
 ## 🛠️ Technology Stack
 
-- **Frontend**: React 18 with TypeScript
-- **Build Tool**: Vite
-- **Routing**: React Router v6
+- **Frontend**: React 19 with TypeScript
+- **Build Tool**: Vite (with Rolldown)
+- **Routing**: React Router v7
 - **Forms**: React Hook Form
-- **Email Service**: EmailJS
+- **Email Service**: EmailJS + AWS Lambda
 - **Styling**: Custom CSS with responsive design
-- **Deployment**: AWS Amplify
+- **Backend**: AWS Amplify (Auth, Storage, Functions)
+- **Deployment**: AWS Amplify Hosting
 
 ## 📋 Prerequisites
 
 - Node.js (v16 or higher)
-- npm or yarn
+- npm (v7 or higher)
+- Git
 - AWS Account (for deployment)
 - EmailJS Account (for contact form)
 
@@ -42,8 +44,12 @@ A modern, responsive website for EB Design Werks - Custom 3D Scanning, Printing 
    ```
 
 3. **Set up environment variables**
-   - Copy `.env.template` to `.env.local`
-   - Fill in your EmailJS credentials and other configuration
+   Create a `.env.local` file with:
+   ```env
+   VITE_EMAILJS_SERVICE_ID=your_service_id
+   VITE_EMAILJS_TEMPLATE_ID=your_template_id
+   VITE_EMAILJS_PUBLIC_KEY=your_public_key
+   ```
 
 4. **Start the development server**
    ```bash
@@ -70,6 +76,27 @@ A modern, responsive website for EB Design Werks - Custom 3D Scanning, Printing 
    - `{{to_email}}`
 4. Get your Service ID, Template ID, and Public Key
 5. Add these to your environment variables
+
+## 🏗️ AWS Amplify Backend
+
+The project includes a full AWS Amplify backend with:
+- **Authentication**: AWS Cognito for user management
+- **Storage**: S3 bucket for file uploads
+- **Functions**: Lambda functions for email processing
+- **API**: GraphQL API with AWS AppSync
+
+### Backend Development
+
+```bash
+# Start local backend sandbox
+npm run sandbox
+
+# Deploy backend changes once
+npm run sandbox:deploy
+
+# Generate backend outputs
+npm run amplify:generate
+```
 
 ## 🚀 AWS Amplify Deployment
 
@@ -107,26 +134,31 @@ A modern, responsive website for EB Design Werks - Custom 3D Scanning, Printing 
 
 ### Build Settings
 
-The default Amplify build settings should work, but here's the configuration for reference:
+The project uses a custom `amplify.yml` configuration:
 
 ```yaml
 version: 1
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - npm ci
-    build:
-      commands:
-        - npm run build
-  artifacts:
-    baseDirectory: dist
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
+applications:
+  - appRoot: .
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+            - echo "Using existing amplify_outputs.json"
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: dist
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
 ```
+
+**Note**: The build uses a pre-committed `amplify_outputs.json` file to avoid permission issues.
 
 ## 📁 Project Structure
 
@@ -143,43 +175,58 @@ src/
 ├── utils/          # Utility functions and data
 │   ├── config.ts
 │   ├── servicesData.ts
-│   └── emailService.ts
+│   ├── emailService.ts
+│   └── amplifyService.ts
 ├── types/          # TypeScript type definitions
 └── App.tsx         # Main app component
+
+amplify/
+├── auth/           # Cognito authentication
+├── functions/      # Lambda functions
+├── storage/        # S3 configuration
+└── data/           # API and data models
 ```
+
+For detailed structure information, see [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md)
 
 ## 🎨 Customization
 
-### Adding New Services
-Edit `src/utils/servicesData.ts` to add or modify services.
+For detailed editing instructions, see [docs/EDITING_GUIDE.md](docs/EDITING_GUIDE.md)
 
-### Updating Contact Information
-Update the configuration in `src/utils/config.ts` or use environment variables.
+### Quick Edits
 
-### Styling
-- Global styles: `src/index.css`
-- Component-specific styles: Located next to each component
-- Color scheme: Defined in CSS variables in `index.css`
-
-### Adding Portfolio Items
-The portfolio section is ready for content. You can add projects by:
-1. Creating a portfolio data file similar to `servicesData.ts`
-2. Building a portfolio grid component
-3. Adding project detail pages if needed
+- **Services**: Edit `src/utils/servicesData.ts`
+- **Contact Info**: Update `src/utils/config.ts`
+- **Styling**: Modify CSS files or CSS variables in `src/index.css`
+- **Content**: Edit page components in `src/pages/`
 
 ## 🔄 Continuous Deployment
 
 Any push to the `main` branch will automatically trigger a new build and deployment in AWS Amplify.
 
-## 📝 Future Enhancements
+For detailed deployment information, see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
 
-- [ ] Implement actual file upload to AWS S3
-- [ ] Add Amplify Studio for content management
-- [ ] Create dynamic portfolio with project details
-- [ ] Add blog functionality
-- [ ] Implement customer testimonials section
-- [ ] Add analytics tracking
-- [ ] Create admin dashboard for content updates
+## 📝 Documentation
+
+- [Project Structure](docs/PROJECT_STRUCTURE.md) - Detailed directory layout
+- [Editing Guide](docs/EDITING_GUIDE.md) - How to make changes
+- [Deployment Guide](docs/DEPLOYMENT.md) - Deployment and hosting details
+
+## 🚧 Known Issues
+
+- CSS minification is disabled due to compatibility with rolldown-vite
+- File uploads are stored locally (S3 integration pending)
+
+## 📈 Future Enhancements
+
+- [x] AWS Amplify backend integration
+- [x] File upload capability
+- [ ] S3 integration for file storage
+- [ ] Dynamic portfolio with CMS
+- [ ] Blog functionality
+- [ ] Customer testimonials
+- [ ] Analytics tracking
+- [ ] Admin dashboard
 
 ## 🤝 Support
 
