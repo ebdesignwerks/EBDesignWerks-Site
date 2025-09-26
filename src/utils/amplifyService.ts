@@ -63,26 +63,33 @@ export const sendQuoteRequestAWS = async (data: QuoteRequestData): Promise<void>
       attachmentKeys
     };
     
-    // Get the Lambda function name from Amplify configuration
+    // Get the Lambda function URL from Amplify configuration
     const { Amplify } = await import('aws-amplify');
     const config = Amplify.getConfig();
-    const functionName = (config as any)?.custom?.sendQuoteRequestFunction;
+    const functionUrl = (config as any)?.custom?.sendQuoteRequestUrl;
     
-    if (!functionName) {
-      console.warn('Lambda function not configured, falling back to direct email');
-      // For now, we'll just log the request
-      console.log('Quote request:', requestBody);
-      // In production, this would fall back to a different method
-      return;
+    if (!functionUrl) {
+      console.error('Lambda function URL not configured');
+      throw new Error('Email service is not properly configured. Please contact us directly at ebdesignwerks@gmail.com');
     }
     
-    // Since we can't install new dependencies and the API module isn't working,
-    // we'll need to deploy and test on AWS directly
-    console.log('Quote request prepared:', requestBody);
-    console.log('Lambda function:', functionName);
+    // Call the Lambda function via HTTP
+    const response = await fetch(functionUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
     
-    // The actual invocation will work when deployed to AWS
-    // where the Amplify SDK can properly invoke the Lambda function
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Lambda function error:', errorData);
+      throw new Error(errorData.message || 'Failed to send quote request');
+    }
+    
+    const result = await response.json();
+    console.log('Quote request sent successfully:', result);
   } catch (error) {
     console.error('Error sending quote request:', error);
     if (error instanceof Error) {

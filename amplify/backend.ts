@@ -3,6 +3,7 @@ import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
 import { sendQuoteRequest } from './functions/send-quote-request/resource';
+import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -32,12 +33,20 @@ lambdaFunction.role?.addManagedPolicy({
   managedPolicyArn: 'arn:aws:iam::aws:policy/AmazonSESFullAccess'
 });
 
-// For now, we'll use the existing amplify_outputs.json and update the client
-// to call the Lambda function directly using the Amplify SDK
+// Add a function URL to make it callable via HTTP
+const functionUrl = lambdaFunction.addFunctionUrl({
+  authType: FunctionUrlAuthType.NONE,
+  cors: {
+    allowedOrigins: ['*'],
+    allowedMethods: ['POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token'],
+  }
+});
 
-// Add the Lambda function name to outputs
+// Add the Lambda function URL to outputs
 backend.addOutput({
   custom: {
-    sendQuoteRequestFunction: backend.sendQuoteRequest.resources.lambda.functionName
+    sendQuoteRequestFunction: backend.sendQuoteRequest.resources.lambda.functionName,
+    sendQuoteRequestUrl: functionUrl.url
   }
 });
