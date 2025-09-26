@@ -1,7 +1,7 @@
 {
   "type": "module",
   "dependencies": {
-    "aws-cdk-lib": "^2.216.0"
+    "aws-cdk-lib": "^2.204.0"
   },
   "devDependencies": {
     "@types/node": "^24.5.2"
