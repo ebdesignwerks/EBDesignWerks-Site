@@ -1,7 +1,8 @@
-import { defineFunction, secret } from '@aws-amplify/backend';
+import { defineFunction } from '@aws-amplify/backend';
 
 export const sendQuoteRequest = defineFunction({
   name: 'send-quote-request',
+  entry: './handler.ts',
   runtime: 20,
   timeoutSeconds: 30,
   environment: {

@@ -3,7 +3,7 @@ import { auth } from './auth/resource';
 import { data } from './data/resource';
 import { storage } from './storage/resource';
 import { sendQuoteRequest } from './functions/send-quote-request/resource';
-import { FunctionUrlAuthType, HttpMethod } from 'aws-cdk-lib/aws-lambda';
+import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -38,7 +38,7 @@ const functionUrl = lambdaFunction.addFunctionUrl({
   authType: FunctionUrlAuthType.NONE,
   cors: {
     allowedOrigins: ['*'],
-    allowedMethods: [HttpMethod.POST, HttpMethod.OPTIONS],
+    allowedMethods: ['POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'X-Amz-Date', 'Authorization', 'X-Api-Key', 'X-Amz-Security-Token'],
   }
 });
