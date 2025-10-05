@@ -133,6 +133,7 @@
   },
   "version": "1.4",
   "custom": {
-    "sendQuoteRequestFunction": "amplify-ebdesignwerksapp--sendquoterequestlambdaB3-YhDsH7xYDZ6v"
+    "sendQuoteRequestFunction": "amplify-ebdesignwerksapp--sendquoterequestlambdaB3-YhDsH7xYDZ6v",
+    "sendQuoteRequestUrl": "https://YOUR-FUNCTION-URL.lambda-url.us-east-1.on.aws/"
   }
 }
